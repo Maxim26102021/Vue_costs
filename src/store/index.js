@@ -5,8 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    payments: []
   },
   mutations: {
+    setData(state, data) {
+      state.payments.push(data)
+    }
   },
   actions: {
   },

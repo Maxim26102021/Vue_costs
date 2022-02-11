@@ -1,8 +1,8 @@
 <template>
-<form>
-    <p>Описание платежа<input type="text" v-model="descr"/></p>
-    <p>Сумма<input type="text" v-model.number="sum"/></p>
-    <p>Дата<input type="date" v-model="date"/></p>
+<form class="form">
+  <input type="text" v-model="descr" placeholder="Описание"/>
+  <input type="text" v-model.number="sum" placeholder="Сумма"/>
+    <input type="date" v-model="date" placeholder="Дата"/>
     <input @click="sendData" type="button" value="Отправить результат"/>
 </form>
 </template>
@@ -30,3 +30,7 @@ export default {
 }
 
 </script>
+
+<style>
+
+</style>

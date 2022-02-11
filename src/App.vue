@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+        <formField @takeData="takeData"></formField>
     <costs
     v-for="(payment, ind) in paginatedUsers"
     :key="ind"
@@ -14,7 +15,6 @@
     :key="page"
     >{{ page }}</a>
     </div>
-    <formField @takeData="takeData"></formField>
   </div>
 </template>
 
@@ -30,14 +30,16 @@ export default {
   data() {
     return {
       count: 5,
-      payments: [],
       pageNumber: 1
     }
   },
   methods: {
     takeData(e) {
-      const num = this.payments.length + 1;
+      
+      const num = this.$store.state.payments.length + 1;
       const newPayment = {nums: num, ...e};
+
+      this.$store.commit('setData', newPayment)
       console.log(newPayment);
       this.payments.push(newPayment);
       console.log(this.payment)
@@ -48,12 +50,12 @@ export default {
   },
   computed: {
     pages() {
-      return Math.ceil(this.payments.length / this.count)
+      return Math.ceil(this.$store.state.payments.length / this.count)
     },
     paginatedUsers () {
       let from = (this.pageNumber - 1) * this.count;
       let to = from + this.count;
-      return this.payments.slice(from, to)
+      return this.$store.state.payments.slice(from, to)
     }
   }
 }
