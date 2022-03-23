@@ -1,14 +1,7 @@
 <template>
   <div id="app">
-        <formField @takeData="takeData"></formField>
-    <costs
-    v-for="(payment, ind) in paginatedUsers"
-    :key="ind"
-    :nums="payment.nums"
-    :date="payment.date"
-    :sum="payment.sum"
-    :descr="payment.descr"
-    ></costs>
+    <formField></formField>
+    <costs></costs>
     <div class="pagination">
       <a @click="showPage(page)" href="#" class="pagination__page"
     v-for="page in pages"
@@ -19,6 +12,9 @@
 </template>
 
 <script>
+
+import { mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 import costs from './components/Costs';
 import formField from './components/Form';
 
@@ -27,67 +23,55 @@ export default {
     costs,
     formField,
   },
-  data() {
-    return {
-      count: 5,
-      pageNumber: 1
-    }
-  },
   methods: {
-    takeData(e) {
-      
-      const num = this.$store.state.payments.length + 1;
-      const newPayment = {nums: num, ...e};
-
-      this.$store.commit('setData', newPayment)
-      console.log(newPayment);
-      this.payments.push(newPayment);
-      console.log(this.payment)
-    },
+    ...mapActions([
+      'fetchData'
+    ]),
     showPage(page) {
-      this.pageNumber = +page
+      this.$store.commit('changePageNumber', page);
+
+    },
+    foo() {
+      fetch('https://raw.githubusercontent.com/Maxim26102021/data/main/pages')
+      .then(data => data.json())
+      .then(data => console.log(data))
     }
   },
   computed: {
+    ...mapGetters([
+      'getPageNumber',
+      'getPaymentLength',
+      'getCount'
+    ]),
     pages() {
-      return Math.ceil(this.$store.state.payments.length / this.count)
+      return Math.ceil(this.getPaymentLength / this.getCount)
     },
-    paginatedUsers () {
-      let from = (this.pageNumber - 1) * this.count;
-      let to = from + this.count;
-      return this.$store.state.payments.slice(from, to)
-    }
+  },
+  created() {
+   this.fetchData(this.getPageNumber)
+   this.foo()
   }
 }
-
 
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Neonderthaw&family=Roboto:wght@300&display=swap');
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  padding: 10px;
 }
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif;
 }
-
 .pagination {
   display: flex;
   &__page {
+    margin: 1px;
+    text-align: center;
     display: block;
     width: 20px;
     height: 20px;
